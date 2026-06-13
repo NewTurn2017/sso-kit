@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { authClient } from "@/src/lib/auth-client";
+import { Button } from "@/components/ui/button";
 
 const authOrigin = process.env.NEXT_PUBLIC_AUTH_ORIGIN ?? "http://auth.lvh.me:3000";
 
@@ -25,16 +26,22 @@ export function LogoutButton() {
   }
 
   return (
-    <>
-      {error ? <p role="alert">{error}</p> : null}
-      <button
+    <div className="flex w-full flex-col gap-2">
+      {error ? (
+        <p role="alert" className="text-sm text-destructive">
+          {error}
+        </p>
+      ) : null}
+      <Button
         type="button"
+        variant="outline"
         data-testid="logout-button"
         disabled={pending}
         onClick={onClick}
+        className="w-full"
       >
-        Logout
-      </button>
-    </>
+        {pending ? "Signing out" : "Log out"}
+      </Button>
+    </div>
   );
 }

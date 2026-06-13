@@ -2,6 +2,8 @@ import { makeFunctionReference } from "convex/server";
 import { fetchAuthQuery } from "@/src/lib/auth-server";
 import { LoginForm } from "./login-form";
 import { LogoutButton } from "./logout-button";
+import { buttonClasses } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 
 type SearchParams = {
   redirect?: string | string[];
@@ -66,22 +68,37 @@ export default async function LoginPage({
   const user = await fetchAuthQuery(getCurrentUser, {});
 
   return (
-    <main>
-      {user ? (
-        <>
-          <h1>Authenticated</h1>
-          <p>{user.email ?? "unknown"}</p>
-          <p>
-            <a href={redirect}>Continue</a>
-          </p>
-          <LogoutButton />
-        </>
-      ) : (
-        <>
-          <h1>Login</h1>
-          <LoginForm redirect={redirect} />
-        </>
-      )}
+    <main className="grid min-h-dvh place-items-center px-4 py-10">
+      <Card className="w-full max-w-sm">
+        {user ? (
+          <>
+            <CardHeader>
+              <CardTitle>You{"’"}re signed in</CardTitle>
+              <CardDescription>{user.email ?? "Authenticated"}</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <a href={redirect} className={buttonClasses({ className: "w-full" })}>
+                Continue
+              </a>
+            </CardContent>
+            <CardFooter>
+              <LogoutButton />
+            </CardFooter>
+          </>
+        ) : (
+          <>
+            <CardHeader>
+              <CardTitle>Sign in</CardTitle>
+              <CardDescription>
+                Use your email and password. New here? Create an account below.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <LoginForm redirect={redirect} />
+            </CardContent>
+          </>
+        )}
+      </Card>
     </main>
   );
 }
