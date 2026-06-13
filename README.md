@@ -1,3 +1,5 @@
+> 📖 **English** · [한국어](README.ko.md)
+
 # SSO Kit
 
 A public starter kit for **subdomain single sign-on** — log in once at
