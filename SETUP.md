@@ -5,7 +5,8 @@
 > step you can do yourself; **stop and ask the human** at the steps marked
 > **🚦 HUMAN-ONLY** (the Convex login in Step 3, the dev-domain choice in Step 4).
 > Narrate each step as you go. **Never fabricate a Convex deployment URL** — wait
-> for the human to paste the real one.
+> for the real one to appear in `packages/backend/.env.local` after the human
+> finishes the Convex login, then read it yourself.
 >
 > If `apps/*/.env.local` already exist, this project is probably already set up —
 > confirm with the human before re-running anything.
