@@ -52,7 +52,7 @@ export const getCurrentUser = query({
 //   npx convex run auth:rotateKeys
 export const rotateKeys = internalAction({
   args: {},
-  handler: async (ctx) => {
+  handler: async (ctx: GenericCtx<DataModel>) => {
     const auth = createAuth(ctx);
     return await auth.api.rotateKeys();
   },
