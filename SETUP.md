@@ -15,6 +15,8 @@
 > wherever it appears; don't narrate the literal token.
 >
 > These commands mirror the README "Quick start"; keep the two in sync.
+>
+> Communicate with the human in **their** language — if they write to you in Korean, guide them in Korean. Keep all commands, env var names, URLs, and file paths byte-for-byte as written (do not translate those).
 
 ## Prerequisites
 
@@ -39,25 +41,23 @@ Confirm it finishes without errors before continuing.
 
 ## Step 3 — 🚦 HUMAN-ONLY: connect a Convex deployment
 
-You cannot do this — it opens a browser to log in. Ask the human to run:
+You cannot do this part — it opens a browser to log in and asks the human to pick or create a project. Ask the human to run it, and to leave it running:
 
 ```bash
 cd packages/backend
 npx convex dev          # first run: log in + create/select a project
 ```
 
-Tell them: "Leave that running — it pushes the auth functions and watches for
-changes. When it's up, paste me the deployment URL it printed (looks like
-`https://YOUR-DEPLOYMENT.convex.cloud`)."
+Tell them: "Log in when the browser opens and pick (or create) a project, then leave this running — it pushes the auth functions and watches for changes. Tell me once it's connected."
 
-**Wait for the URL. Do not invent one.** You'll need the `YOUR-DEPLOYMENT`
-subdomain (the part before `.convex.cloud`) again in Steps 5–6. The matching site
-host is the **same** subdomain with `.convex.site` instead of `.convex.cloud`
-(Convex prints both) — you'll use it in Step 6.
+Then **read the deployment values yourself** — `npx convex dev` writes them into `packages/backend/.env.local`, so you do **not** need the human to copy or paste any URL:
 
-> ⚠️ Any Convex deployment name you may see in `docs/` (e.g. in
-> `docs/poc-verification.md`) is **historical evidence from the kit author** —
-> never reuse it. The human creates/selects their own deployment here.
+- `CONVEX_URL` — e.g. `https://YOUR-DEPLOYMENT.convex.cloud`
+- `CONVEX_SITE_URL` — e.g. `https://YOUR-DEPLOYMENT.convex.site`
+
+Wait until `packages/backend/.env.local` exists and contains those keys (that means the login + project step finished). **Never fabricate a deployment URL** — if the file isn't there yet, ask the human to finish the Convex login. You'll reuse `CONVEX_URL` and `CONVEX_SITE_URL` in Step 6.
+
+> ⚠️ Any Convex deployment name you may see in `docs/` (e.g. in `docs/poc-verification.md`) is historical evidence from the kit author — never reuse it. The human creates/selects their own deployment here.
 
 ## Step 4 — 🚦 HUMAN-ONLY decision: dev domain
 
@@ -103,12 +103,11 @@ cp apps/auth/.env.example apps/auth/.env.local
 cp apps/chat/.env.example apps/chat/.env.local
 ```
 
-In **both** files, replace `YOUR-DEPLOYMENT` with the deployment subdomain from
-Step 3:
+In **both** files, set the two Convex URLs to the values you read from
+`packages/backend/.env.local` in Step 3:
 
-- `NEXT_PUBLIC_CONVEX_URL=https://YOUR-DEPLOYMENT.convex.cloud`
-- `NEXT_PUBLIC_CONVEX_SITE_URL=https://YOUR-DEPLOYMENT.convex.site` (same
-  subdomain as the `.cloud` URL — just `.convex.site`)
+- `NEXT_PUBLIC_CONVEX_URL` = the `CONVEX_URL` value you read from `packages/backend/.env.local` in Step 3
+- `NEXT_PUBLIC_CONVEX_SITE_URL` = the `CONVEX_SITE_URL` value from that same file
 
 **If you kept the default `lvh.me`**, the origin lines are already correct — no
 further edits. **If you chose a custom `<DOMAIN>`**, also rewrite all four origin
