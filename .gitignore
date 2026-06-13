@@ -1,0 +1,35 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Build output
+.next/
+out/
+dist/
+*.tsbuildinfo
+next-env.d.ts
+
+# Caches
+.turbo/
+
+# Convex local cache (generated types in convex/_generated are committed)
+.convex/
+
+# Secrets / local environment (keep .env.example tracked)
+.env
+.env.local
+.env*.local
+
+# Local agent / tooling state — not part of the kit
+.omx/
+.senior-mode/
+.agents/
+.claude/
+tasks/
+skills-lock.json
+
+# Editors / OS
+.vscode/
+.idea/
+.DS_Store
+*.log

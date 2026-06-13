@@ -1,0 +1,6 @@
+{
+  "name": "@types/react",
+  "version": "19.2.7",
+  "private": true,
+  "types": "index.d.ts"
+}

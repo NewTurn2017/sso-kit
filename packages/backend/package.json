@@ -1,0 +1,20 @@
+{
+  "name": "@sso-kit/backend",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "convex dev",
+    "demo": "node server.mjs",
+    "build": "node ../../scripts/static-check.mjs",
+    "lint": "node ../../scripts/verify-forbidden.mjs",
+    "typecheck": "node ../../scripts/static-check.mjs"
+  },
+  "dependencies": {
+    "@convex-dev/better-auth": "0.12.2",
+    "better-auth": "~1.6.9",
+    "convex": "^1.25.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.0"
+  }
+}

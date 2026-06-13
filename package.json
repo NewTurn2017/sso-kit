@@ -1,0 +1,23 @@
+{
+  "name": "sso-kit-poc",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@10.33.0",
+  "scripts": {
+    "dev:backend": "pnpm --filter @sso-kit/backend dev",
+    "dev:auth": "pnpm --filter @sso-kit/auth dev",
+    "dev:chat": "pnpm --filter @sso-kit/chat dev",
+    "demo:backend": "node packages/backend/server.mjs",
+    "demo:auth": "AUTH_ORIGIN=http://auth.lvh.me:3000 CHAT_ORIGIN=http://chat.lvh.me:3001 COOKIE_DOMAIN=lvh.me node apps/auth/server.mjs",
+    "demo:chat": "AUTH_ORIGIN=http://auth.lvh.me:3000 CHAT_ORIGIN=http://chat.lvh.me:3001 COOKIE_DOMAIN=lvh.me node apps/chat/server.mjs",
+    "lint": "node scripts/verify-forbidden.mjs",
+    "typecheck": "node scripts/static-check.mjs",
+    "build": "node scripts/static-check.mjs",
+    "verify:versions": "node scripts/verify-versions.mjs",
+    "verify:forbidden": "node scripts/verify-forbidden.mjs"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.0",
+    "turbo": "^2.6.0"
+  }
+}

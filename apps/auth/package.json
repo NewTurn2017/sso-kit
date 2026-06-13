@@ -1,0 +1,25 @@
+{
+  "name": "@sso-kit/auth",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "next dev -H 0.0.0.0 -p 3000",
+    "demo": "node server.mjs",
+    "build": "node ../../scripts/static-check.mjs",
+    "lint": "node ../../scripts/verify-forbidden.mjs",
+    "typecheck": "node ../../scripts/static-check.mjs"
+  },
+  "dependencies": {
+    "@convex-dev/better-auth": "0.12.2",
+    "better-auth": "~1.6.9",
+    "convex": "^1.25.0",
+    "next": "^15.5.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "workspace:*",
+    "@types/react": "workspace:*",
+    "typescript": "^5.9.0"
+  }
+}
