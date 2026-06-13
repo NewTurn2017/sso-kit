@@ -53,7 +53,7 @@ export const getCurrentUser = query({
 export const rotateKeys = internalAction({
   args: {},
   handler: async (ctx: GenericCtx<DataModel>) => {
-    const auth = createAuth(ctx);
+    const auth = createAuth(ctx) as { api: { rotateKeys: () => Promise<unknown> } };
     return await auth.api.rotateKeys();
   },
 });
