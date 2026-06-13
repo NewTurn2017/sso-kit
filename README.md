@@ -84,13 +84,20 @@ Better Auth runs *inside* Convex, so these live on the deployment (not in a
 `.env.local`). Run from `packages/backend/`:
 
 ```bash
-npx convex env set BETTER_AUTH_SECRET "$(openssl rand -base64 32)"
+npx convex env get BETTER_AUTH_SECRET >/dev/null 2>&1 || npx convex env set BETTER_AUTH_SECRET "$(openssl rand -base64 32)"
 npx convex env set SITE_URL          http://auth.lvh.me:3000
 npx convex env set COOKIE_DOMAIN     lvh.me
 npx convex env set TRUSTED_ORIGINS   http://auth.lvh.me:3000,http://chat.lvh.me:3001
 ```
 
 (Or set them in the Convex dashboard → Settings → Environment Variables.)
+
+> The `BETTER_AUTH_SECRET` line is idempotent — it only sets the secret if one
+> isn't already present, so re-running setup never rotates it. Better Auth encrypts
+> its JWKS signing key with this secret; if you reuse a deployment that ran with a
+> different secret (or change the secret), clear the `betterAuth` component's `jwks`
+> table or run `npx convex run auth:rotateKeys`, otherwise the Convex token endpoint
+> throws "Failed to decrypt private key". See **Troubleshooting** in `SETUP.md`.
 
 ### 4. Create each app's `.env.local`
 

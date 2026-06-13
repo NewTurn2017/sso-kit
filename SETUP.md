@@ -84,7 +84,7 @@ has linked a deployment and is still running). Open a **new terminal** — leave
 `<DOMAIN>` from Step 4:
 
 ```bash
-npx convex env set BETTER_AUTH_SECRET "$(openssl rand -base64 32)"
+npx convex env get BETTER_AUTH_SECRET >/dev/null 2>&1 || npx convex env set BETTER_AUTH_SECRET "$(openssl rand -base64 32)"
 npx convex env set SITE_URL          http://auth.<DOMAIN>:3000
 npx convex env set COOKIE_DOMAIN     <DOMAIN>
 npx convex env set TRUSTED_ORIGINS   http://auth.<DOMAIN>:3000,http://chat.<DOMAIN>:3001
@@ -94,6 +94,17 @@ With the default, that makes `SITE_URL=http://auth.lvh.me:3000`,
 `COOKIE_DOMAIN=lvh.me`, `TRUSTED_ORIGINS=http://auth.lvh.me:3000,http://chat.lvh.me:3001`.
 (If `openssl` isn't available, any 32+ character random string works for
 `BETTER_AUTH_SECRET`.)
+
+> ⚠️ **`BETTER_AUTH_SECRET` must be set BEFORE any sign-up/login or token request**
+> (i.e. before Step 7), and the deployment must not have been used earlier with a
+> different secret. The first command above is intentionally **idempotent** — it
+> only sets the secret if one isn't already present, so re-running setup never
+> rotates it. Better Auth encrypts its JWKS signing key with this secret, so if you
+> **reuse a deployment** that previously ran with a different `BETTER_AUTH_SECRET`,
+> or you ever **change the secret**, you MUST clear the stale signing key
+> (dashboard → Data → `betterAuth` component → `jwks` table → Clear table) or run
+> `npx convex run auth:rotateKeys`. Otherwise `GET /api/auth/convex/token` throws
+> **"Failed to decrypt private key"**. See **Troubleshooting** below.
 
 ## Step 6 — Write each app's `.env.local`
 
@@ -143,3 +154,45 @@ Report the result to the human.
 
 Offer: "Want this on GitHub? I can run the `make-public` skill (or `make-private`
 for a private repo)." Only proceed if the human says yes.
+
+## Troubleshooting
+
+### `GET /api/auth/convex/token` → "Failed to decrypt private key"
+
+**Symptom:** sign-up/login succeeds but minting the Convex JWT fails with a
+`BetterAuthError: Failed to decrypt private key…`.
+
+**Cause:** Better Auth stores its JWKS signing key encrypted with
+`BETTER_AUTH_SECRET`. If the secret **changed** after the key was created — or you
+**reused a deployment** that ran earlier with a different secret — the stored key
+can no longer be decrypted. (This is a stale-key vs rotated-secret mismatch, not a
+code bug; it never affects a *fresh* deployment whose secret is set before the
+first sign-up.)
+
+**Recovery** (no user data is lost — only the signing keys are regenerated):
+
+1. Confirm the current secret and **do not change it**. From `packages/backend/`:
+   ```bash
+   npx convex env get BETTER_AUTH_SECRET
+   ```
+   Do **not** re-run the `openssl rand` line — that generates a *new* secret and
+   re-breaks things. (Step 5's command is idempotent precisely to avoid this.)
+2. Clear the stale key, either way:
+   - **Dashboard:** open the deployment → **Data** tab → switch the component
+     selector from the app to the **`betterAuth`** component → select the **`jwks`**
+     table → **Clear table**.
+   - **One command:** run the recovery action shipped in
+     `packages/backend/convex/auth.ts`:
+     ```bash
+     npx convex run auth:rotateKeys
+     ```
+     It deletes all `jwks` rows and regenerates one under the **current** secret.
+3. Regenerate the key under the current secret by hitting the JWKS endpoint once
+   (`GET https://<deployment>.convex.site/api/auth/convex/jwks`) or simply signing
+   in again — the key is recreated lazily on the next JWT signing.
+4. Retry `GET /api/auth/convex/token`; it now decrypts. Logged-in sessions just
+   mint a fresh JWT on their next request.
+
+**Avoid it entirely** for a fresh project: set `BETTER_AUTH_SECRET` in Step 5
+**before** the first sign-up/login (Step 7), and never reuse a deployment that ran
+with a different secret.

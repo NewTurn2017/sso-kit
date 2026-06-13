@@ -81,13 +81,21 @@ Better Auth는 Convex *내부*에서 동작하므로, 이 값들은 `.env.local`
 배포에 설정합니다. `packages/backend/`에서 실행:
 
 ```bash
-npx convex env set BETTER_AUTH_SECRET "$(openssl rand -base64 32)"
+npx convex env get BETTER_AUTH_SECRET >/dev/null 2>&1 || npx convex env set BETTER_AUTH_SECRET "$(openssl rand -base64 32)"
 npx convex env set SITE_URL          http://auth.lvh.me:3000
 npx convex env set COOKIE_DOMAIN     lvh.me
 npx convex env set TRUSTED_ORIGINS   http://auth.lvh.me:3000,http://chat.lvh.me:3001
 ```
 
 (또는 Convex 대시보드 → Settings → Environment Variables 에서 설정.)
+
+> `BETTER_AUTH_SECRET` 줄은 멱등(idempotent)입니다 — 시크릿이 이미 있으면 다시
+> 설정하지 않으므로 설정을 재실행해도 시크릿이 교체되지 않습니다. Better Auth는
+> 이 시크릿으로 JWKS 서명 키를 암호화하므로, 다른 시크릿으로 사용된 적 있는 배포를
+> 재사용하거나 시크릿을 변경하면 `betterAuth` 컴포넌트의 `jwks` 테이블을 비우거나
+> `npx convex run auth:rotateKeys`를 실행해야 합니다. 그러지 않으면 Convex 토큰
+> 엔드포인트가 "Failed to decrypt private key" 오류를 던집니다. `SETUP.md`의
+> **Troubleshooting** 섹션을 참고하세요.
 
 ### 4. 각 앱의 `.env.local` 만들기
 

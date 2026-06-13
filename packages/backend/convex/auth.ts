@@ -1,7 +1,7 @@
 import { createClient, type GenericCtx } from "@convex-dev/better-auth";
 import { convex } from "@convex-dev/better-auth/plugins";
 import { betterAuth } from "better-auth/minimal";
-import { query } from "./_generated/server";
+import { query, internalAction } from "./_generated/server";
 import { components } from "./_generated/api";
 import type { DataModel } from "./_generated/dataModel";
 import authConfig from "./auth.config";
@@ -43,5 +43,17 @@ export const getCurrentUser = query({
   args: {},
   handler: async (ctx: GenericCtx<DataModel>) => {
     return (await authComponent.safeGetAuthUser(ctx)) ?? null;
+  },
+});
+
+// Recovery for "Failed to decrypt private key": deletes all JWKS rows and
+// regenerates one under the CURRENT BETTER_AUTH_SECRET. Run after the secret
+// changed or when reusing a deployment that ran with a different secret:
+//   npx convex run auth:rotateKeys
+export const rotateKeys = internalAction({
+  args: {},
+  handler: async (ctx) => {
+    const auth = createAuth(ctx);
+    return await auth.api.rotateKeys();
   },
 });
