@@ -11,3 +11,11 @@ Convex agent skills for common tasks can be installed by running
 `npx convex ai-files install`.
 
 <!-- convex-ai-end -->
+
+## First-time setup
+
+**If this project isn't configured yet** (no `apps/*/.env.local`), follow
+[`SETUP.md`](SETUP.md) one step at a time. Execute each step yourself where you
+can; ask the user only for inputs you cannot determine (the Convex login result,
+the dev-domain choice). **Do not proceed past a step that needs the user until
+they confirm**, and never fabricate a Convex deployment URL.

@@ -55,6 +55,9 @@ login page. This was verified in a real browser (see
 
 ## Quick start
 
+> 🤖 **Using an AI coding agent?** It can run this setup for you — point it at
+> [`SETUP.md`](SETUP.md) (Claude/Codex read it automatically on first open).
+
 **Prerequisites:** Node 18+, [pnpm](https://pnpm.io) 10 (this repo pins
 `pnpm@10.33.0`), and a free [Convex](https://convex.dev) account.
 

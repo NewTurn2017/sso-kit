@@ -14,7 +14,8 @@
     "typecheck": "node scripts/static-check.mjs",
     "build": "node scripts/static-check.mjs",
     "verify:versions": "node scripts/verify-versions.mjs",
-    "verify:forbidden": "node scripts/verify-forbidden.mjs"
+    "verify:forbidden": "node scripts/verify-forbidden.mjs",
+    "verify:runbook": "node scripts/verify-runbook.mjs"
   },
   "devDependencies": {
     "typescript": "^5.9.0",
