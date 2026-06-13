@@ -81,7 +81,7 @@ Better Auth는 Convex *내부*에서 동작하므로, 이 값들은 `.env.local`
 배포에 설정합니다. `packages/backend/`에서 실행:
 
 ```bash
-npx convex env get BETTER_AUTH_SECRET >/dev/null 2>&1 || npx convex env set BETTER_AUTH_SECRET "$(openssl rand -base64 32)"
+test -n "$(npx convex env get BETTER_AUTH_SECRET 2>/dev/null)" || npx convex env set BETTER_AUTH_SECRET "$(openssl rand -base64 32)"
 npx convex env set SITE_URL          http://auth.lvh.me:3000
 npx convex env set COOKIE_DOMAIN     lvh.me
 npx convex env set TRUSTED_ORIGINS   http://auth.lvh.me:3000,http://chat.lvh.me:3001
